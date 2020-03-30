@@ -22,7 +22,7 @@ public class PerformanceQuickSort {
 
     public static void main(String[] args) throws Exception {
         try {
-            String groupId = args[4];
+            String groupId = args[3];
             ApplicationContext context =
                     new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
             Service service = context.getBean(Service.class);
@@ -58,15 +58,13 @@ public class PerformanceQuickSort {
             String command = args[0];
             Integer count = 0;
             Integer qps = 0;
-            BigInteger sortedSize = BigInteger.ZERO;
             switch (command) {
                 case "sort":
-                    count = Integer.parseInt(args[2]);
-                    qps = Integer.parseInt(args[3]);
-                    sortedSize = new BigInteger(args[1]);
+                    count = Integer.parseInt(args[1]);
+                    qps = Integer.parseInt(args[2]);
                     break;
                 default:
-                    System.out.println("Args: <sort> <SortSize> <Total> <QPS> <> <GroupID>");
+                    System.out.println("Args: <sort> <Total> <QPS> <GroupID>");
             }
 
             ThreadPoolTaskExecutor threadPool = new ThreadPoolTaskExecutor();

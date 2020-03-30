@@ -23,7 +23,7 @@ public class PerformanceEvidence {
 
     public static void main(String[] args) throws Exception {
         try {
-            String groupId = args[4];
+            String groupId = args[3];
             ApplicationContext context =
                     new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
             Service service = context.getBean(Service.class);
