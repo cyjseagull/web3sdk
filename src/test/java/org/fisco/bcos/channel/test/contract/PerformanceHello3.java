@@ -2,38 +2,31 @@ package org.fisco.bcos.channel.test.contract;
 
 import com.google.common.util.concurrent.RateLimiter;
 import java.math.BigInteger;
-import java.util.Random;
-import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import org.fisco.bcos.channel.client.Service;
 import org.fisco.bcos.web3j.crypto.Credentials;
 import org.fisco.bcos.web3j.protocol.Web3j;
 import org.fisco.bcos.web3j.protocol.channel.ChannelEthereumService;
 import org.fisco.bcos.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.fisco.bcos.web3j.utils.Web3AsyncThreadPoolSize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import java.util.concurrent.atomic.AtomicLong;
 import org.fisco.bcos.web3j.crypto.gm.GenCredential;
 
-public class PerfomanceTableInsert {
-    private static Logger logger = LoggerFactory.getLogger(PerfomanceTableInsert.class);
+public class PerformanceHello3 {
+    private static Logger logger = LoggerFactory.getLogger(PerformanceHello3.class);
     private static AtomicInteger sended = new AtomicInteger(0);
-
-    private static String getId() {
-        UUID uuid = UUID.randomUUID();
-        return uuid.toString().replace("-", "");
-    }
-
+    
     private static AtomicLong uniqeid = new AtomicLong(0);
-
     public static long getNextID() {
         return uniqeid.getAndIncrement();
-    }
+}
 
     public static void main(String[] args) throws Exception {
         try {
@@ -51,6 +44,9 @@ public class PerfomanceTableInsert {
             ChannelEthereumService channelEthereumService = new ChannelEthereumService();
             channelEthereumService.setChannelService(service);
 
+            Web3AsyncThreadPoolSize.web3AsyncCorePoolSize = 3000;
+            Web3AsyncThreadPoolSize.web3AsyncPoolSize = 2000;
+
             ScheduledExecutorService scheduledExecutorService =
                     Executors.newScheduledThreadPool(500);
             Web3j web3 =
@@ -60,7 +56,10 @@ public class PerfomanceTableInsert {
                             scheduledExecutorService,
                             Integer.parseInt(groupId));
 
-           Credentials credentials = GenCredential.create();
+            //Credentials credentials =
+            //        Credentials.create(
+            ///                "b83261efa42895c38c6c2364ca878f43e77f3cddbc922bf57d0d48070f79feb6");
+            Credentials credentials = GenCredential.create();
 
             BigInteger gasPrice = new BigInteger("30000000");
             BigInteger gasLimit = new BigInteger("30000000");
@@ -86,16 +85,14 @@ public class PerfomanceTableInsert {
             threadPool.initialize();
 
             System.out.println("Deploying contract...");
-            TableTest tabletest = TableTest.deploy(web3, credentials, gasPrice, gasLimit).send();
+            HelloWorld hello = HelloWorld.deploy(web3, credentials, gasPrice, gasLimit).send();
 
-            PerfomanceCollector collector = new PerfomanceCollector();
+            PerformanceCollector collector = new PerformanceCollector();
             collector.setTotal(count);
 
             RateLimiter limiter = RateLimiter.create(qps);
             Integer area = count / 10;
             final Integer total = count;
-
-            Random random = new Random(System.currentTimeMillis());
 
             System.out.println("Start test，total：" + count);
             for (Integer i = 0; i < count; ++i) {
@@ -104,22 +101,22 @@ public class PerfomanceTableInsert {
                             @Override
                             public void run() {
                                 limiter.acquire();
-                                PerfomanceTableTestCallback callback =
-                                        new PerfomanceTableTestCallback();
+                                PerformanceOkCallback callback = new PerformanceOkCallback();
                                 callback.setCollector(collector);
                                 try {
-                                    long _id = getNextID();
-                                    tabletest.insert(
-                                            "fruit" + _id % 1000,
-                                            BigInteger.valueOf(_id),
-                                            "apple" + getId(),
-                                            callback);
+                                    long id = getNextID();
+                                    String setStr = "test_";
+                                    for(int i = 0; i < 1000; i++)
+                                    {
+                                        setStr += id % 10;
+                                    }
+                                    hello.set(setStr, callback);
                                 } catch (Exception e) {
                                     TransactionReceipt receipt = new TransactionReceipt();
                                     receipt.setStatus("-1");
 
                                     callback.onResponse(receipt);
-                                    logger.error("Error sending:", e);
+                                    logger.info(e.getMessage());
                                 }
 
                                 int current = sended.incrementAndGet();
@@ -138,6 +135,7 @@ public class PerfomanceTableInsert {
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(-1);
+            ;
         }
     }
 }

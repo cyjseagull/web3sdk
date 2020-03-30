@@ -1,39 +1,28 @@
 package org.fisco.bcos.channel.test.contract;
-
 import com.google.common.util.concurrent.RateLimiter;
 import java.math.BigInteger;
-import java.util.Random;
-import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import org.fisco.bcos.channel.client.Service;
 import org.fisco.bcos.web3j.crypto.Credentials;
 import org.fisco.bcos.web3j.protocol.Web3j;
 import org.fisco.bcos.web3j.protocol.channel.ChannelEthereumService;
 import org.fisco.bcos.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.fisco.bcos.web3j.utils.Web3AsyncThreadPoolSize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import java.security.SecureRandom;
+import org.fisco.bcos.web3j.utils.Numeric;
+import org.fisco.bcos.web3j.abi.datatypes.Address;
 import org.fisco.bcos.web3j.crypto.gm.GenCredential;
 
-public class PerfomanceTableInsert {
-    private static Logger logger = LoggerFactory.getLogger(PerfomanceTableInsert.class);
+public class PerformanceERC20 {
+    private static Logger logger = LoggerFactory.getLogger(PerformanceERC20.class);
     private static AtomicInteger sended = new AtomicInteger(0);
-
-    private static String getId() {
-        UUID uuid = UUID.randomUUID();
-        return uuid.toString().replace("-", "");
-    }
-
-    private static AtomicLong uniqeid = new AtomicLong(0);
-
-    public static long getNextID() {
-        return uniqeid.getAndIncrement();
-    }
 
     public static void main(String[] args) throws Exception {
         try {
@@ -44,12 +33,15 @@ public class PerfomanceTableInsert {
             service.setGroupId(Integer.parseInt(groupId));
             service.run();
 
-            System.out.println("Start test...");
+            System.out.println("Start ERC20 test...");
             System.out.println(
                     "===================================================================");
 
             ChannelEthereumService channelEthereumService = new ChannelEthereumService();
             channelEthereumService.setChannelService(service);
+
+            Web3AsyncThreadPoolSize.web3AsyncCorePoolSize = 3000;
+            Web3AsyncThreadPoolSize.web3AsyncPoolSize = 2000;
 
             ScheduledExecutorService scheduledExecutorService =
                     Executors.newScheduledThreadPool(500);
@@ -60,22 +52,20 @@ public class PerfomanceTableInsert {
                             scheduledExecutorService,
                             Integer.parseInt(groupId));
 
-           Credentials credentials = GenCredential.create();
-
+            Credentials credentials = GenCredential.create();
             BigInteger gasPrice = new BigInteger("30000000");
             BigInteger gasLimit = new BigInteger("30000000");
 
             String command = args[0];
             Integer count = 0;
             Integer qps = 0;
-
             switch (command) {
-                case "trans":
+                case "transfer":
                     count = Integer.parseInt(args[1]);
                     qps = Integer.parseInt(args[2]);
                     break;
                 default:
-                    System.out.println("Args: <trans> <Total> <QPS>");
+                    System.out.println("Args: <transfer> <Total> <QPS> <GroupID>");
             }
 
             ThreadPoolTaskExecutor threadPool = new ThreadPoolTaskExecutor();
@@ -85,17 +75,17 @@ public class PerfomanceTableInsert {
 
             threadPool.initialize();
 
-            System.out.println("Deploying contract...");
-            TableTest tabletest = TableTest.deploy(web3, credentials, gasPrice, gasLimit).send();
+            System.out.println("Deploying StandardToken contract...");
+            String ethFundDeposit = "0x1";
+            BigInteger currentSupply = new BigInteger("1000000000");
+            HKMCToken erc20 = HKMCToken.deploy(web3, credentials, gasPrice, gasLimit, ethFundDeposit, currentSupply).send();
 
-            PerfomanceCollector collector = new PerfomanceCollector();
+            PerformanceCollector collector = new PerformanceCollector();
             collector.setTotal(count);
 
             RateLimiter limiter = RateLimiter.create(qps);
             Integer area = count / 10;
             final Integer total = count;
-
-            Random random = new Random(System.currentTimeMillis());
 
             System.out.println("Start test，total：" + count);
             for (Integer i = 0; i < count; ++i) {
@@ -104,22 +94,24 @@ public class PerfomanceTableInsert {
                             @Override
                             public void run() {
                                 limiter.acquire();
-                                PerfomanceTableTestCallback callback =
-                                        new PerfomanceTableTestCallback();
+                                PerformanceOkCallback callback = new PerformanceOkCallback();
                                 callback.setCollector(collector);
                                 try {
-                                    long _id = getNextID();
-                                    tabletest.insert(
-                                            "fruit" + _id % 1000,
-                                            BigInteger.valueOf(_id),
-                                            "apple" + getId(),
-                                            callback);
+                                    int random = new SecureRandom().nextInt(100);
+                                    String valueStr = "" + random;
+                                    BigInteger value = new BigInteger(valueStr);
+                                    String to = Integer.toHexString(random);
+                                     
+                                    erc20.transfer(to, value, callback);
+                                    //BigInteger balance = erc20.balanceOf(to).send();
+                                    //System.out.println("balance of 0x02 is: " + balance);
+
                                 } catch (Exception e) {
                                     TransactionReceipt receipt = new TransactionReceipt();
                                     receipt.setStatus("-1");
 
                                     callback.onResponse(receipt);
-                                    logger.error("Error sending:", e);
+                                    logger.info(e.getMessage());
                                 }
 
                                 int current = sended.incrementAndGet();
@@ -138,6 +130,7 @@ public class PerfomanceTableInsert {
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(-1);
+            ;
         }
     }
 }
