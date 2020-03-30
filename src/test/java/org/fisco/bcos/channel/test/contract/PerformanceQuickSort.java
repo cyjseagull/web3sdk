@@ -95,7 +95,7 @@ public class PerformanceQuickSort {
                                 callback.setCollector(collector);
                                 try {
                                     BigInteger sortedSize = new BigInteger("10");
-                                    quickSort.sort(sortedSize);
+                                    quickSort.sort(sortedSize, callback);
                                 } catch (Exception e) {
                                     TransactionReceipt receipt = new TransactionReceipt();
                                     receipt.setStatus("-1");

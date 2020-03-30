@@ -100,7 +100,7 @@ public class PerformanceEvidence {
                                     String evInfo = "test_info";
                                     int random = new SecureRandom().nextInt(50000);
                                     String eviId = String.valueOf(random);
-                                    evidence.insertEvidence(evi, evInfo, eviId);
+                                    evidence.insertEvidence(evi, evInfo, eviId, callback);
                                 } catch (Exception e) {
                                     TransactionReceipt receipt = new TransactionReceipt();
                                     receipt.setStatus("-1");
