@@ -17,8 +17,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.security.SecureRandom;
 
-public class PerformanceEvidence {
-    private static Logger logger = LoggerFactory.getLogger(PerformanceQuickSort.class);
+public class PerformanceEvidence2 {
+    private static Logger logger = LoggerFactory.getLogger(PerformanceEvidence2.class);
     private static AtomicInteger sended = new AtomicInteger(0);
 
     public static void main(String[] args) throws Exception {
@@ -96,8 +96,8 @@ public class PerformanceEvidence {
                                 PerformanceOkCallback callback = new PerformanceOkCallback();
                                 callback.setCollector(collector);
                                 try {
-                                    String evi = "test";
-                                    String evInfo = "test_info";
+                                    String evi = "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest";
+                                    String evInfo = "test_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_info";
                                     int random = new SecureRandom().nextInt(50000);
                                     String eviId = String.valueOf(random);
                                     evidence.insertEvidence(evi, evInfo, eviId, callback);
