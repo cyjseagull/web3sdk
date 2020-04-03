@@ -78,7 +78,9 @@ public class PerformanceERC20 {
             threadPool.initialize();
 
             System.out.println("Deploying StandardToken contract...");
-            StandardToken erc20 = StandardToken.deploy(web3, credentials, gasPrice, gasLimit).send();
+            String ethFundDeposit = "0x1";
+            BigInteger currentSupply = new BigInteger("1000000000");
+            HKMCToken erc20 = HKMCToken.deploy(web3, credentials, gasPrice, gasLimit, ethFundDeposit, currentSupply).send();
 
             PerformanceCollector collector = new PerformanceCollector();
             collector.setTotal(count);
