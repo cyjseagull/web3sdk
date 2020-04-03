@@ -112,7 +112,7 @@ public class PerformanceERC20 {
                                     TransactionReceipt receipt = new TransactionReceipt();
                                     receipt.setStatus("-1");
 
-                                    callback.onResponse(receipt);
+                                    //callback.onResponse(receipt);
                                     logger.info(e.getMessage());
                                 }
 
