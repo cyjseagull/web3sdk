@@ -105,7 +105,7 @@ public class PerformanceERC20 {
                                     String to = Integer.toHexString(random);
                                      
                                     erc20.transfer(to, value, callback);
-                                    BigInteger balance = erc20.balanceOf(to).get();
+                                    BigInteger balance = erc20.balanceOf(to).send();
                                     System.out.println("balance of " + to + " is: " + balance);
 
                                 } catch (Exception e) {
