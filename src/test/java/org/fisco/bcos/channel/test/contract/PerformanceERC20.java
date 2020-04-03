@@ -102,11 +102,9 @@ public class PerformanceERC20 {
                                     int random = new SecureRandom().nextInt(100);
                                     String valueStr = "" + random;
                                     BigInteger value = new BigInteger(valueStr);
-                                    String to = Integer.toHexString(random);
+                                    //String to = Integer.toHexString(random);
                                      
-                                    erc20.transfer(to, value, callback);
-                                    BigInteger balance = erc20.balanceOf(to).send();
-                                    System.out.println("balance of " + to + " is: " + balance);
+                                    erc20.transfer("0x02", value, callback);
 
                                 } catch (Exception e) {
                                     TransactionReceipt receipt = new TransactionReceipt();
@@ -129,6 +127,8 @@ public class PerformanceERC20 {
                             }
                         });
             }
+            BigInteger balance = erc20.balanceOf("0x02").send();
+            System.out.println("balance of 0x02 is: " + balance);
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(-1);
