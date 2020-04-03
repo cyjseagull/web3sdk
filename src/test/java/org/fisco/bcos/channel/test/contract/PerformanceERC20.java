@@ -96,23 +96,23 @@ public class PerformanceERC20 {
                             @Override
                             public void run() {
                                 limiter.acquire();
-                                //PerformanceOkCallback callback = new PerformanceOkCallback();
-                                //callback.setCollector(collector);
+                                PerformanceOkCallback callback = new PerformanceOkCallback();
+                                callback.setCollector(collector);
                                 try {
                                     int random = new SecureRandom().nextInt(100);
                                     String valueStr = "" + random;
                                     BigInteger value = new BigInteger(valueStr);
                                     String to = Integer.toHexString(random);
                                      
-                                    erc20.transfer(to, value).send();
-                                    BigInteger balance = erc20.balanceOf(to).send();
-                                    System.out.println("balance of 0x02 is: " + balance);
+                                    erc20.transfer(to, value, callback);
+                                    //BigInteger balance = erc20.balanceOf(to).send();
+                                    //System.out.println("balance of 0x02 is: " + balance);
 
                                 } catch (Exception e) {
                                     TransactionReceipt receipt = new TransactionReceipt();
                                     receipt.setStatus("-1");
 
-                                    //callback.onResponse(receipt);
+                                    callback.onResponse(receipt);
                                     logger.info(e.getMessage());
                                 }
 
