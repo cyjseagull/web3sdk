@@ -96,8 +96,8 @@ public class PerformanceEvidence {
                                 PerformanceOkCallback callback = new PerformanceOkCallback();
                                 callback.setCollector(collector);
                                 try {
-                                    String evi = "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest";
-                                    String evInfo = "test_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_info";
+                                    String evi = "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest";
+                                    String evInfo = "test_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_infotest_info";
                                     int random = new SecureRandom().nextInt(50000);
                                     String eviId = String.valueOf(random);
                                     evidence.insertEvidence(evi, evInfo, eviId, callback);
