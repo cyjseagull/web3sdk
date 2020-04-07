@@ -111,7 +111,7 @@ public class PerfomanceTableInsert {
                                 try {
                                     long _id = getNextID();
                                     tabletest.insert(
-                                            "fruit" + _id % TableTestClient.modevalue,
+                                            "fruit" + _id % 1000,
                                             BigInteger.valueOf(_id),
                                             "apple" + getId(),
                                             callback);

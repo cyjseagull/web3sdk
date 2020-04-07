@@ -113,7 +113,7 @@ public class PerfomanceTableRemove {
                                     Random r = new Random();
                                     long l1 = r.nextLong();
                                     tabletest.remove(
-                                            "fruit" + l1 % TableTestClient.modevalue,
+                                            "fruit" + l1 % 1000,
                                             BigInteger.valueOf(_id),
                                             callback);
 
