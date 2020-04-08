@@ -48,10 +48,7 @@ public class PerformanceHello {
                             15 * 100,
                             scheduledExecutorService,
                             Integer.parseInt(groupId));
-
-            Credentials credentials =
-                    Credentials.create(
-                            "b83261efa42895c38c6c2364ca878f43e77f3cddbc922bf57d0d48070f79feb6");
+            Credentials credentials = GenCredential.create();
 
             BigInteger gasPrice = new BigInteger("30000000");
             BigInteger gasLimit = new BigInteger("30000000");
