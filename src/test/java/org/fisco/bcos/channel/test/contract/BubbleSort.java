@@ -15,6 +15,7 @@ import org.fisco.bcos.web3j.abi.datatypes.Function;
 import org.fisco.bcos.web3j.abi.datatypes.Type;
 import org.fisco.bcos.web3j.abi.datatypes.generated.Uint256;
 import org.fisco.bcos.web3j.crypto.Credentials;
+import org.fisco.bcos.web3j.crypto.EncryptType;
 import org.fisco.bcos.web3j.protocol.Web3j;
 import org.fisco.bcos.web3j.protocol.core.RemoteCall;
 import org.fisco.bcos.web3j.protocol.core.methods.response.Log;
@@ -36,15 +37,13 @@ import org.fisco.bcos.web3j.tx.txdecode.TransactionDecoder;
  */
 @SuppressWarnings("unchecked")
 public class BubbleSort extends Contract {
-    public static final String[] BINARY_ARRAY = {"608060405234801561001057600080fd5b5061023f806100206000396000f300608060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063fe91386514610046575b600080fd5b34801561005257600080fd5b5061007160048036038101908080359060200190929190505050610073565b005b60606000826040519080825280602002602001820160405280156100a65781602001602082028038833980820191505090505b509150600090505b81518110156100e35780830382828151811015156100c857fe5b906020019060200201818152505080806001019150506100ae565b6100ee82835161012a565b7fd353a1cbe5143a1ec767ce453eee65d823145f88787ff81f4260c5babc5bf807836040518082815260200191505060405180910390a1505050565b60008060008092505b6001840383101561020c576001830191505b600184038210156101ff57848281518110151561015e57fe5b90602001906020020151858481518110151561017657fe5b9060200190602002015111156101f257848381518110151561019457fe5b90602001906020020151905084828151811015156101ae57fe5b9060200190602002015185848151811015156101c657fe5b90602001906020020181815250508085838151811015156101e357fe5b90602001906020020181815250505b8180600101925050610145565b8280600101935050610133565b50505050505600a165627a7a72305820285e7b9647dec33730529f15b52e086250f22f3c678ad6c50fcccf3eb3fd14f10029"};
+    public static String BINARY = "608060405234801561001057600080fd5b5061023f806100206000396000f300608060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063fe91386514610046575b600080fd5b34801561005257600080fd5b5061007160048036038101908080359060200190929190505050610073565b005b60606000826040519080825280602002602001820160405280156100a65781602001602082028038833980820191505090505b509150600090505b81518110156100e35780830382828151811015156100c857fe5b906020019060200201818152505080806001019150506100ae565b6100ee82835161012a565b7fd353a1cbe5143a1ec767ce453eee65d823145f88787ff81f4260c5babc5bf807836040518082815260200191505060405180910390a1505050565b60008060008092505b6001840383101561020c576001830191505b600184038210156101ff57848281518110151561015e57fe5b90602001906020020151858481518110151561017657fe5b9060200190602002015111156101f257848381518110151561019457fe5b90602001906020020151905084828151811015156101ae57fe5b9060200190602002015185848151811015156101c657fe5b90602001906020020181815250508085838151811015156101e357fe5b90602001906020020181815250505b8180600101925050610145565b8280600101935050610133565b50505050505600a165627a7a72305820421e6ba1c0dec42c397f26e4d51a4aba3a8d239a0aed6979b905a2ad2faccae40029";
 
-    public static final String BINARY = String.join("", BINARY_ARRAY);
-
-    public static final String[] ABI_ARRAY = {"[{\"constant\":false,\"inputs\":[{\"name\":\"size\",\"type\":\"uint256\"}],\"name\":\"sort\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"name\":\"size\",\"type\":\"uint256\"}],\"name\":\"finish\",\"type\":\"event\"}]"};
-
-    public static final String ABI = String.join("", ABI_ARRAY);
+    public static final String ABI = "[{\"constant\":false,\"inputs\":[{\"name\":\"size\",\"type\":\"uint256\"}],\"name\":\"sort\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"name\":\"size\",\"type\":\"uint256\"}],\"name\":\"finish\",\"type\":\"event\"}]";
 
     public static final TransactionDecoder transactionDecoder = new TransactionDecoder(ABI, BINARY);
+
+    public static String SM_BINARY = "608060405234801561001057600080fd5b5061023f806100206000396000f300608060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806378de95f414610046575b600080fd5b34801561005257600080fd5b5061007160048036038101908080359060200190929190505050610073565b005b60606000826040519080825280602002602001820160405280156100a65781602001602082028038833980820191505090505b509150600090505b81518110156100e35780830382828151811015156100c857fe5b906020019060200201818152505080806001019150506100ae565b6100ee82835161012a565b7fbe1cdf88ff344d8b08951cc5ea73edc44c6f798d3465b058579354489a54f9a5836040518082815260200191505060405180910390a1505050565b60008060008092505b6001840383101561020c576001830191505b600184038210156101ff57848281518110151561015e57fe5b90602001906020020151858481518110151561017657fe5b9060200190602002015111156101f257848381518110151561019457fe5b90602001906020020151905084828151811015156101ae57fe5b9060200190602002015185848151811015156101c657fe5b90602001906020020181815250508085838151811015156101e357fe5b90602001906020020181815250505b8180600101925050610145565b8280600101935050610133565b50505050505600a165627a7a72305820001606afadfb89c9e10018874b03db8677eb4e625f4d32c4e83055f9546be72f0029";
 
     public static final String FUNC_SORT = "sort";
 
@@ -54,20 +53,24 @@ public class BubbleSort extends Contract {
 
     @Deprecated
     protected BubbleSort(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
-        super(BINARY, contractAddress, web3j, credentials, gasPrice, gasLimit);
+        super(getBinary(), contractAddress, web3j, credentials, gasPrice, gasLimit);
     }
 
     protected BubbleSort(String contractAddress, Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider) {
-        super(BINARY, contractAddress, web3j, credentials, contractGasProvider);
+        super(getBinary(), contractAddress, web3j, credentials, contractGasProvider);
     }
 
     @Deprecated
     protected BubbleSort(String contractAddress, Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
-        super(BINARY, contractAddress, web3j, transactionManager, gasPrice, gasLimit);
+        super(getBinary(), contractAddress, web3j, transactionManager, gasPrice, gasLimit);
     }
 
     protected BubbleSort(String contractAddress, Web3j web3j, TransactionManager transactionManager, ContractGasProvider contractGasProvider) {
-        super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider);
+        super(getBinary(), contractAddress, web3j, transactionManager, contractGasProvider);
+    }
+
+    public static String getBinary() {
+        return (EncryptType.encryptType == EncryptType.ECDSA_TYPE ? BINARY : SM_BINARY);
     }
 
     public static TransactionDecoder getTransactionDecoder() {
@@ -151,21 +154,21 @@ public class BubbleSort extends Contract {
     }
 
     public static RemoteCall<BubbleSort> deploy(Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider) {
-        return deployRemoteCall(BubbleSort.class, web3j, credentials, contractGasProvider, BINARY, "");
+        return deployRemoteCall(BubbleSort.class, web3j, credentials, contractGasProvider, getBinary(), "");
     }
 
     @Deprecated
     public static RemoteCall<BubbleSort> deploy(Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
-        return deployRemoteCall(BubbleSort.class, web3j, credentials, gasPrice, gasLimit, BINARY, "");
+        return deployRemoteCall(BubbleSort.class, web3j, credentials, gasPrice, gasLimit, getBinary(), "");
     }
 
     public static RemoteCall<BubbleSort> deploy(Web3j web3j, TransactionManager transactionManager, ContractGasProvider contractGasProvider) {
-        return deployRemoteCall(BubbleSort.class, web3j, transactionManager, contractGasProvider, BINARY, "");
+        return deployRemoteCall(BubbleSort.class, web3j, transactionManager, contractGasProvider, getBinary(), "");
     }
 
     @Deprecated
     public static RemoteCall<BubbleSort> deploy(Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
-        return deployRemoteCall(BubbleSort.class, web3j, transactionManager, gasPrice, gasLimit, BINARY, "");
+        return deployRemoteCall(BubbleSort.class, web3j, transactionManager, gasPrice, gasLimit, getBinary(), "");
     }
 
     public static class FinishEventResponse {
