@@ -108,7 +108,7 @@ public class PerformanceHello3 {
                                     String setStr = "test_";
                                     for(int i = 0; i < 1000; i++)
                                     {
-                                        setStr += i;
+                                        setStr += id % 10;
                                     }
                                     hello.set(setStr, callback);
                                 } catch (Exception e) {
