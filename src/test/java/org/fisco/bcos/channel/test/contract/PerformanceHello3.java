@@ -25,7 +25,7 @@ public class PerformanceHello3 {
     private static AtomicLong uniqeid = new AtomicLong(0);
     public static long getNextID() {
         return uniqeid.getAndIncrement();
-    }
+}
 
     public static void main(String[] args) throws Exception {
         try {
@@ -103,7 +103,11 @@ public class PerformanceHello3 {
                                 callback.setCollector(collector);
                                 try {
                                     long id = getNextID();
-                                    String setStr = "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest_" + id;
+                                    String setStr = "test_";
+                                    for(int i = 0; i < 1000; i++)
+                                    {
+                                        setStr += i;
+                                    }
                                     hello.set(setStr, callback);
                                 } catch (Exception e) {
                                     TransactionReceipt receipt = new TransactionReceipt();
