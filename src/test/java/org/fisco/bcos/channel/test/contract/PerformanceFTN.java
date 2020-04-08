@@ -17,6 +17,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.fisco.bcos.web3j.abi.datatypes.Address;
 import java.security.SecureRandom;
+import org.fisco.bcos.web3j.crypto.gm.GenCredential;
 
 public class PerformanceFTN {
     private static Logger logger = LoggerFactory.getLogger(PerformanceFTN.class);

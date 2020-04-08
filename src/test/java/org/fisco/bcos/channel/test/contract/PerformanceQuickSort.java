@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.fisco.bcos.web3j.crypto.gm.GenCredential;
 
 public class PerformanceQuickSort {
     private static Logger logger = LoggerFactory.getLogger(PerformanceQuickSort.class);

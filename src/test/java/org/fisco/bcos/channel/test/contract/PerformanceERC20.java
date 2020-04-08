@@ -18,6 +18,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.security.SecureRandom;
 import org.fisco.bcos.web3j.utils.Numeric;
 import org.fisco.bcos.web3j.abi.datatypes.Address;
+import org.fisco.bcos.web3j.crypto.gm.GenCredential;
 
 public class PerformanceERC20 {
     private static Logger logger = LoggerFactory.getLogger(PerformanceERC20.class);

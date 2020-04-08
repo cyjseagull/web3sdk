@@ -16,6 +16,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.security.SecureRandom;
+import org.fisco.bcos.web3j.crypto.gm.GenCredential;
 
 public class PerformanceEvidence3 {
     private static Logger logger = LoggerFactory.getLogger(PerformanceEvidence3.class);
