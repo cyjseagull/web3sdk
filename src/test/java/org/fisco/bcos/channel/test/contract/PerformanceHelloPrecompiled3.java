@@ -101,7 +101,7 @@ public class PerformanceHelloPrecompiled3 {
                                 try {
                                     long id = getNextID();
                                     String setStr = "test_";
-                                    for(int i = 0; i < 1000; i++)
+                                    for(int i = 0; i < 10000; i++)
                                     {
                                         setStr += id % 10;
                                     }
