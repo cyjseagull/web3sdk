@@ -82,7 +82,7 @@ public class PerformanceEvidenceVerify2{
             threadPool.initialize();
 
             System.out.println("Deploying Evidence contract...");
-            EvidenceVerify evidence = EvidenceVerify.deploy(web3, credentials, gasPrice, gasLimit).send();
+            EvidenceVerify2 evidence = EvidenceVerify2.deploy(web3, credentials, gasPrice, gasLimit).send();
 
             PerformanceCollector collector = new PerformanceCollector();
             collector.setTotal(count);
