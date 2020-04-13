@@ -112,7 +112,7 @@ public class PerformanceEvidenceVerify2{
                                     String eviId = String.valueOf(random);
                                     // sign to evi
                                     byte[] message = Hash.sha3(evi.getBytes());
-                                    Sign.SignatureData sign = signHandler.signMessage(message, keyPair);
+                                    Sign.SignatureData sign = signHandler.signMessage(evi.getBytes(), keyPair);
                                     int v = sign.getV();
                                     evidence.insertEvidence(evi, evInfo, eviId, message, BigInteger.valueOf(v), sign.getR(), sign.getS(), callback);
                                 } catch (Exception e) {
