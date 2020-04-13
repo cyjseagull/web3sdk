@@ -95,7 +95,7 @@ public class PerformanceEvidenceVerify2{
             ECKeyPair keyPair = credentials.getEcKeyPair();
 
             System.out.println("Start test，total：" + count);
-            System.out.println("address：" + credentials.address());
+            System.out.println("address：" + credentials.getAddress());
 
             for (Integer i = 0; i < count; ++i) {
                 threadPool.execute(
