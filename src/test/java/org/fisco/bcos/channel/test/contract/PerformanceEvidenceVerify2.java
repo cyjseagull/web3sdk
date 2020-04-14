@@ -1,6 +1,6 @@
 package org.fisco.bcos.channel.test.contract;
 import com.google.common.util.concurrent.RateLimiter;
-
+import org.fisco.bcos.web3j.crypto.Keys;
 import java.math.BigInteger;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -92,10 +92,12 @@ public class PerformanceEvidenceVerify2{
             final Integer total = count;
             
             ECDSASign signHandler = new ECDSASign();
-            ECKeyPair keyPair = credentials.getEcKeyPair();
+            ECKeyPair keyPair = Keys.createEcKeyPair();
 
             System.out.println("Start test，total：" + count);
             System.out.println("address：" + credentials.getAddress());
+            String signAddr = Keys.getAddress(keyPair);
+            System.out.println("standardCredential address：" + signAddr);
 
             for (Integer i = 0; i < count; ++i) {
                 threadPool.execute(
@@ -114,7 +116,7 @@ public class PerformanceEvidenceVerify2{
                                     byte[] message = Hash.sha3(evi.getBytes());
                                     Sign.SignatureData sign = signHandler.signMessage(evi.getBytes(), keyPair);
                                     int v = sign.getV();
-                                    evidence.insertEvidence(evi, evInfo, eviId, message, BigInteger.valueOf(v), sign.getR(), sign.getS(), callback);
+                                    evidence.insertEvidence(evi, evInfo, eviId, signAddr ,message, BigInteger.valueOf(v), sign.getR(), sign.getS(), callback);
                                 } catch (Exception e) {
                                     TransactionReceipt receipt = new TransactionReceipt();
                                     receipt.setStatus("-1");
