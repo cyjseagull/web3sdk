@@ -1,12 +1,19 @@
 package org.fisco.bcos.channel.test.contract;
-import com.google.common.util.concurrent.RateLimiter;
 
+import com.google.common.util.concurrent.RateLimiter;
 import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.fisco.bcos.channel.client.Service;
 import org.fisco.bcos.web3j.crypto.Credentials;
+import org.fisco.bcos.web3j.crypto.ECDSASign;
+import org.fisco.bcos.web3j.crypto.ECKeyPair;
+import org.fisco.bcos.web3j.crypto.Hash;
+import org.fisco.bcos.web3j.crypto.Keys;
+import org.fisco.bcos.web3j.crypto.Sign;
+import org.fisco.bcos.web3j.crypto.gm.GenCredential;
 import org.fisco.bcos.web3j.protocol.Web3j;
 import org.fisco.bcos.web3j.protocol.channel.ChannelEthereumService;
 import org.fisco.bcos.web3j.protocol.core.methods.response.TransactionReceipt;
@@ -16,15 +23,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import java.security.SecureRandom;
-import org.fisco.bcos.web3j.crypto.gm.GenCredential;
-import org.fisco.bcos.web3j.crypto.Credentials;
-import org.fisco.bcos.web3j.crypto.Hash;
-import org.fisco.bcos.web3j.crypto.ECDSASign;
-import org.fisco.bcos.web3j.crypto.ECKeyPair;
-import org.fisco.bcos.web3j.crypto.Sign;
 
-public class PerformanceEvidenceVerify{
+public class PerformanceEvidenceVerify {
     private static Logger logger = LoggerFactory.getLogger(PerformanceEvidenceVerify.class);
     private static AtomicInteger sended = new AtomicInteger(0);
 
@@ -82,7 +82,8 @@ public class PerformanceEvidenceVerify{
             threadPool.initialize();
 
             System.out.println("Deploying Evidence contract...");
-            EvidenceVerify evidence = EvidenceVerify.deploy(web3, credentials, gasPrice, gasLimit).send();
+            EvidenceVerify evidence =
+                    EvidenceVerify.deploy(web3, credentials, gasPrice, gasLimit).send();
 
             PerformanceCollector collector = new PerformanceCollector();
             collector.setTotal(count);
@@ -90,11 +91,15 @@ public class PerformanceEvidenceVerify{
             RateLimiter limiter = RateLimiter.create(qps);
             Integer area = count / 10;
             final Integer total = count;
-            
+
             ECDSASign signHandler = new ECDSASign();
-            ECKeyPair keyPair = credentials.getEcKeyPair();
+            ECKeyPair keyPair = Keys.createEcKeyPair();
 
             System.out.println("Start test，total：" + count);
+            System.out.println("address：" + credentials.getAddress());
+            String signAddr = Keys.getAddress(keyPair);
+            System.out.println("standardCredential address：" + signAddr);
+
             for (Integer i = 0; i < count; ++i) {
                 threadPool.execute(
                         new Runnable() {
@@ -110,9 +115,19 @@ public class PerformanceEvidenceVerify{
                                     String eviId = String.valueOf(random);
                                     // sign to evi
                                     byte[] message = Hash.sha3(evi.getBytes());
-                                    Sign.SignatureData sign = signHandler.signMessage(message, keyPair);
+                                    Sign.SignatureData sign =
+                                            signHandler.signMessage(evi.getBytes(), keyPair);
                                     int v = sign.getV();
-                                    evidence.insertEvidence(evi, evInfo, eviId, message, BigInteger.valueOf(v), sign.getR(), sign.getS(), callback);
+                                    evidence.insertEvidence(
+                                            evi,
+                                            evInfo,
+                                            eviId,
+                                            signAddr,
+                                            message,
+                                            BigInteger.valueOf(v),
+                                            sign.getR(),
+                                            sign.getS(),
+                                            callback);
                                 } catch (Exception e) {
                                     TransactionReceipt receipt = new TransactionReceipt();
                                     receipt.setStatus("-1");
@@ -137,7 +152,6 @@ public class PerformanceEvidenceVerify{
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(-1);
-            ;
         }
     }
 }
