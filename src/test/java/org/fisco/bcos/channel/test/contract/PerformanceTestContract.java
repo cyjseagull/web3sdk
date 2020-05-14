@@ -100,8 +100,7 @@ public class PerformanceTestContract {
                                 try {
                                     int random = new SecureRandom().nextInt(100);
                                     String valueStr = "" + random;
-                                    String uuid = UUID.randomUUID().toString().replaceAll("-", "");
-                                    BigInteger value = new BigInteger(uuid);
+                                    BigInteger value = new BigInteger(valueStr);
                                     String to = Integer.toHexString(random);
                                     String secret = "a770793d57e6269a08984e99c292e91afe82be7cdd63583adfbc58bcb8cb49c2";
                                     String rule = "_couponTypea57e626";
