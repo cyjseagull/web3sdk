@@ -18,6 +18,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.fisco.bcos.web3j.crypto.gm.GenCredential;
 import java.security.SecureRandom;
+import java.util.UUID;
 
 public class PerformanceTestCRUD {
     private static Logger logger = LoggerFactory.getLogger(PerformanceTestCRUD.class);
@@ -98,12 +99,11 @@ public class PerformanceTestCRUD {
                                 callback.setCollector(collector);
                                 try {
                                     int random = new SecureRandom().nextInt(10000000);
-                                    String valueStr = "" + random;
-                                    BigInteger value = new BigInteger(valueStr);
                                     String to = Integer.toHexString(random);
                                     String secret = "a770793d57e6269a08984e99c292e91afe82be7cdd63583adfbc58bcb8cb49c2";
                                     String rule = "_couponTypea57e626";
-                                    ok.create(valueStr, to, secret.getBytes(), new BigInteger("0"), new BigInteger("0"), new BigInteger("100"), new BigInteger("200"), new BigInteger("500"), new BigInteger("500"), rule.getBytes(), new BigInteger("1"), callback);
+                                    String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+                                    ok.create(uuid, to, secret.getBytes(), new BigInteger("0"), new BigInteger("0"), new BigInteger("100"), new BigInteger("200"), new BigInteger("500"), new BigInteger("500"), rule.getBytes(), new BigInteger("1"), callback);
                                 } catch (Exception e) {
                                     TransactionReceipt receipt = new TransactionReceipt();
                                     receipt.setStatus("-1");
