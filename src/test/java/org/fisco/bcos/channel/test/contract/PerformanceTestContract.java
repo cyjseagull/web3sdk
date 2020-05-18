@@ -104,7 +104,8 @@ public class PerformanceTestContract {
                                     String to = Integer.toHexString(random);
                                     String secret = "a770793d57e6269a08984e99c292e91afe82be7cdd63583adfbc58bcb8cb49c2";
                                     String rule = "_couponTypea57e626";
-                                    ok.create(value, to, secret.getBytes(), new BigInteger("0"), new BigInteger("0"), new BigInteger("100"), new BigInteger("200"), new BigInteger("500"), new BigInteger("500"), rule.getBytes(), new BigInteger("1"), callback);
+                                     String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+                                    ok.create(uuid, to, secret.getBytes(), new BigInteger("0"), new BigInteger("0"), new BigInteger("100"), new BigInteger("200"), new BigInteger("500"), new BigInteger("500"), rule.getBytes(), new BigInteger("1"), callback);
                                 } catch (Exception e) {
                                     TransactionReceipt receipt = new TransactionReceipt();
                                     receipt.setStatus("-1");
