@@ -244,6 +244,16 @@ public class JsonRpc2_0Web3j implements Web3j {
     }
 
     @Override
+    public Request<?, BcosBlock> getBlockHeaderByNumber(
+            DefaultBlockParameter defaultBlockParameter) {
+        return new Request<>(
+                "getBlockHeaderByNumber",
+                Arrays.asList(groupId, defaultBlockParameter.getValue()),
+                web3jService,
+                BcosBlock.class);
+    }
+
+    @Override
     public Request<?, BlockHash> getBlockHashByNumber(DefaultBlockParameter defaultBlockParameter) {
         return new Request<>(
                 "getBlockHashByNumber",

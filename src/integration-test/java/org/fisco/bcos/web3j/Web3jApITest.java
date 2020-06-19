@@ -146,6 +146,13 @@ public class Web3jApITest extends TestBase {
   }
 
   @Test
+  public void getBlockHeaderByNumber() throws Exception {
+    BcosBlock bcosBlock =
+        web3j.getBlockHeaderByNumber(DefaultBlockParameter.valueOf(blockNumber), true).send();
+    assertNotNull(bcosBlock.getBlock());
+  }
+
+  @Test
   public void getBlockHashByNumber() throws Exception {
     BlockHash blockHash =
         web3j.getBlockHashByNumber(DefaultBlockParameter.valueOf(blockNumber)).send();

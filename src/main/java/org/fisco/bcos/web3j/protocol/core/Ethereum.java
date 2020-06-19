@@ -77,6 +77,8 @@ public interface Ethereum {
     Request<?, BcosBlock> getBlockByNumber(
             DefaultBlockParameter defaultBlockParameter, boolean returnFullTransactionObjects);
 
+    Request<?, BcosBlock> getBlockHeaderByNumber(DefaultBlockParameter defaultBlockParameter);
+
     Request<?, BlockHash> getBlockHashByNumber(DefaultBlockParameter defaultBlockParameter);
 
     Request<?, BcosTransaction> getTransactionByHash(String transactionHash);
